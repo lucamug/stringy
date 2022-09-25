@@ -1,0 +1,26 @@
+{
+	"name": "stringy",
+	"version": "1.0.0",
+	"description": "",
+	"license": "UNLICENSED",
+	"private": true,
+	"author": "",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/lucamug/stringy"
+	},
+	"devDependencies": {
+		"elm": "0.19.1-5",
+		"elm-go": "5.0.14",
+		"elm-review": "^2.7.5",
+		"esbuild": "^0.15.8",
+		"html-minifier": "4.0.0",
+		"replace": "1.2.1",
+		"terser": "5.14.2"
+	},
+	"scripts": {
+		"start": "cmd/start",
+		"build": "cmd/build",
+		"test": "cmd/test"
+	}
+}

@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${ELM_JSON} tree"
+COMMENT="Calculating the Elm dependencies tree"
+singleCommand "${COMMAND}" "${COMMENT}"

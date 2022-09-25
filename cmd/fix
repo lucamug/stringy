@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="$ELM_REVIEW --fix-all"
+COMMENT="Fixing errors in the code"
+singleCommand "${COMMAND}" "${COMMENT}"

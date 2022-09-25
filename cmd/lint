@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${ELM_REVIEW}"
+COMMENT="Linting using elm-review"
+singleCommand "${COMMAND}" "${COMMENT}"

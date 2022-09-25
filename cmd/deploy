@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="yarn run deploy:static ${TENANT_NAME} ${SERVICE_NAME} build && sleep 10"
+COMMENT="Deploying production files"
+singleCommand "${COMMAND}" "${COMMENT}"

@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${ELM_TEST}"
+COMMENT="Running tests. Remember that you can use \"only\" to run\n    a subset of tests. More info at:\n    https://package.elm-lang.org/packages/elm-explorations/test/latest/Test#only"
+singleCommand "${COMMAND}" "${COMMENT}"

@@ -1,0 +1,6 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+resetElmCache
+printf "${PRIMARY} Resetting Elm cache completed.${STOP}\n\n"

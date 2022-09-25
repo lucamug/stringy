@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${ELM_FORMAT} src --yes"
+COMMENT="Formatting Elm files"
+singleCommand "${COMMAND}" "${COMMENT}"

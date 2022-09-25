@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${ELM_GO} src/Main.elm --dir=${FOLDER_BUILD} --pushstate --start-page=index.html --port=4201 --no-reload --path-to-elm=${ELM} -- --output=docs/js/elm.js --debug"
+COMMENT="Starting the server to test the files build for production"
+singleCommand "${COMMAND}" "${COMMENT}"

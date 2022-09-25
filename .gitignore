@@ -1,0 +1,23 @@
+# Build folders
+dist/
+
+# Dependency folders (can exists also on subfolders)
+elm-stuff/
+node_modules/
+
+# Desktop Services Store on macOS
+.DS_Store
+
+# IDE plugin configurations and temp files
+.vscode/
+.idea/
+
+# Atom Elm plugin temporary file
+Elmjutsu*.elm
+
+# This file can be generate by mistake if running "elm make"
+/index.html
+
+# This file is just copied from the root, no need to git it
+/docs/js/elm.js
+/docs/index.html

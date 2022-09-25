@@ -1,0 +1,7 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+COMMAND="${NODEAPP_NPM_CHECK_UPDATES}"
+COMMENT="Status of NPM packages.\n    This command may take several minutes to finish."
+singleCommand "${COMMAND}" "${COMMENT}"

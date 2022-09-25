@@ -1,0 +1,5 @@
+# Hi robots!
+User-agent: *
+Allow: /
+
+Sitemap: https://stringy.guupa.com/sitemap.txt

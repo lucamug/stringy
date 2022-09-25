@@ -1,0 +1,79 @@
+#!/bin/bash
+set -eu
+
+source cmd/config
+rootFolder=`pwd`
+reportFile=docs/pre-PR-check-report.txt
+DONE=" ${SECONDARY}done${STOP}\n"
+
+function formatAll {
+    printf "${PRIMARY}${POINT}Formatting all files......"
+    $ELM_FORMAT --yes > /dev/null
+    printf "${DONE}"
+}
+
+function runTests {
+    printf "${PRIMARY}${POINT}Running tests:\n\n${STOP}"
+    $ELM_TEST
+}
+
+function verifyBuilds {
+    printf "${PRIMARY}${POINT}Elm compiling dry run:${STOP}\n\n"
+    $ELM make src/Main.elm --output=${FOLDER_TEMP}/main.js --optimize
+    rm -rf $FOLDER_TEMP
+}
+
+function elmReview {
+    printf "${PRIMARY}${POINT}Running elm-review .......${STOP}"
+    printf "\n\n#### Running elm-review ####\n\n" >> $reportFile
+    $ELM_REVIEW --no-details >> $reportFile || true
+    printf "${DONE}"
+}
+
+function addingElmDependenciesTree {
+    printf "\n\n#### ELM DEPENDENCIES TREE ####\n\n" >> $reportFile
+    printf "\n\nGenerated with elm-json\n\n" >> $reportFile
+    $ELM_JSON tree >> $reportFile
+}
+
+printf "\n${SECONDARY}"
+printf "     ✨⭐ Thank you for running pre-PR-check ⭐✨\n"
+printf "\n${GREEN}"
+printf " 🌳 Remember to execute this command before each PR 🌳\n"
+printf "\n${PRIMARY}"
+printf "       ┌───────────────────┐\n"
+printf "       │${SECONDARY}    Pre-PR Check${PRIMARY}   │\n"
+printf "       └───────────────────┘\n"
+printf "\n"
+printf "       ┌───────────────────┐\n" > $reportFile
+printf "       │    Pre-PR Check   │\n" >> $reportFile
+printf "       └───────────────────┘\n" >> $reportFile
+
+find "${rootFolder}/src" -name "Elmjutsu*" -type f -delete
+formatAll
+runTests
+verifyBuilds
+addingElmDependenciesTree
+elmReview
+printf "\n${PRIMARY}${POINT}The report ${SECONDARY}${reportFile}${PRIMARY}\n"
+printf "   has been updated.\n"
+printf "\n"
+printf "   The file should not change. In case it does,\n"
+printf "   have a look at it and if everything is all right\n"
+printf "   add it to your Pull Request and submit it.\n"
+printf "\n"
+printf "   In case there are errors, execute the command\n"
+printf "${SECONDARY}\n"
+printf "      sh cmd/fix\n"
+printf "${PRIMARY}\n"
+printf "   to fix the errors automatically. Then re-run\n"
+printf "   pre-PR-check one more time.\n"
+printf "\n"
+printf "${PRIMARY}\n"
+printf "       ┌───────────────────┐\n"
+printf "       │${SECONDARY}      THE END${PRIMARY}      │\n"
+printf "       └───────────────────┘\n"
+printf " \n\n" >> $reportFile
+printf "       ┌───────────────────┐\n" >> $reportFile
+printf "       │      THE END      │\n" >> $reportFile
+printf "       └───────────────────┘\n" >> $reportFile

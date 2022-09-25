@@ -1,0 +1,12 @@
+{
+    "checks": {
+        "DropConcatOfLists": false,
+        "MapNothingToNothing": false,
+        "UnnecessaryListConcat": false,
+        "UseConsOverConcat": false
+    },
+    "excludedPaths": [
+        "src/Api/DataGenerated",
+        "src/MainWithDebugger/Browser.elm"
+    ]
+}
