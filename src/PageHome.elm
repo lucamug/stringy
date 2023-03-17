@@ -46,9 +46,19 @@ list =
     , ( "Convert a decimal integer to a hexadecimal string such as \"ffff\""
       , { m | debounced_query = "Hex.toString", debounced_value = "65535" }
       )
-    , ( "Check if a string contains a valid JSON formatted data"
+    , ( "Check if a string contains valid JSON formatted data"
       , { m | debounced_query = "Json.Decode.Generic.json", debounced_value = """{ "a": "b", "c": 23, "d": [1,2,3] }""" }
       )
+
+    --
+    --
+    , ( "Check if a string contains valid JSON formatted data"
+      , { m | debounced_query = "Generic.Json.decode", debounced_value = """{ "a": "b", "c": 23, "d": [1,2,3] }""" }
+      )
+
+    -- , ( "Check if a string contains valid YAML formatted data"
+    --   , { m | debounced_query = "Json.Decode.Generic.json", debounced_value = """{ "a": "b", "c": 23, "d": [1,2,3] }""" }
+    --   )
     , ( "Understand how \"slice\" works"
       , { m | debounced_query = "String.slice", debounced_value = "Snakes on a plane!", debounced_valu1 = "-6", debounced_valu2 = "-1" }
       )

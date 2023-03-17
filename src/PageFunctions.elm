@@ -10,6 +10,10 @@ import Crypto.Strings
 import Date
 import Element exposing (..)
 import Element.Font as Font
+import Generic.Decoder
+import Generic.Json
+import Generic.Xml
+import Generic.Yaml
 import Hex
 import Html
 import Html.Attributes
@@ -27,6 +31,7 @@ import Shared
 import String.Extra
 import Time
 import Url
+import Yaml.Decode
 
 
 list : Shared.AllValues a -> List Shared.Function
@@ -493,6 +498,96 @@ list model =
              , outcome = [ text <| Debug.toString <| Json.Decode.decodeString Json.Decode.Generic.json model.value ]
              }
            ]
+        --
+        -- andre-dietrich/elm-generic
+        --
+        ++ [ { prefix = "Generic.Json"
+             , function = "decode"
+             , signature = "String -> Result String Generic.Value"
+             , description = "A JSON decoder that works with any JSON, decoding into the generic data model"
+             , package = "andre-dietrich/elm-generic"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Generic.Json.decode model.value ]
+             }
+           ]
+        ++ [ { prefix = "Generic.Yaml"
+             , function = "decode"
+             , signature = "String -> Result String Generic.Value"
+             , description = "A YAML decoder that works with any YAML, decoding into the generic data model"
+             , package = "andre-dietrich/elm-generic"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Generic.Yaml.decode model.value ]
+             }
+           ]
+        ++ [ { prefix = "Generic.Xml"
+             , function = "decode"
+             , signature = "String -> Result String Generic.Value"
+             , description = "A XML decoder that works with any XML, decoding into the generic data model"
+             , package = "andre-dietrich/elm-generic"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Generic.Xml.decode model.value ]
+             }
+           ]
+        ++ (let
+                toJson : String -> Result String String
+                toJson string =
+                    string
+                        |> Generic.Decoder.decode
+                        |> Result.map Generic.Json.encode
+                        |> Result.map (Generic.Json.toString 0)
+            in
+            [ { prefix = "Generic.Decoder"
+              , function = "toJson"
+              , signature = "String -> Result String String"
+              , description = "A converter from XML/JSON/YAML to JSON"
+              , package = "andre-dietrich/elm-generic"
+              , executionBefore = []
+              , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+              , outcome = [ text <| Debug.toString <| toJson model.value ]
+              }
+            ]
+           )
+        ++ (let
+                toYaml : String -> Result String String
+                toYaml string =
+                    string
+                        |> Generic.Decoder.decode
+                        |> Result.map Generic.Yaml.encode
+                        |> Result.map (Generic.Yaml.toString 1)
+            in
+            [ { prefix = "Generic.Decoder"
+              , function = "toYaml"
+              , signature = "String -> Result String String"
+              , description = "A converter from XML/JSON/YAML to JSON"
+              , package = "andre-dietrich/elm-generic"
+              , executionBefore = []
+              , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+              , outcome = [ text <| Debug.toString <| toYaml model.value ]
+              }
+            ]
+           )
+        ++ (let
+                toXml : String -> Result String String
+                toXml string =
+                    string
+                        |> Generic.Decoder.decode
+                        |> Result.map Generic.Xml.encode
+                        |> Result.map (Generic.Xml.toString 0)
+            in
+            [ { prefix = "Generic.Decoder"
+              , function = "toXml"
+              , signature = "String -> Result String String"
+              , description = "A converter from XML/JSON/YAML to XML"
+              , package = "andre-dietrich/elm-generic"
+              , executionBefore = []
+              , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+              , outcome = [ text <| Debug.toString <| toXml model.value ]
+              }
+            ]
+           )
         --
         -- noahzgordon/elm-color-extra
         --
