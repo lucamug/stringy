@@ -9,6 +9,8 @@ import Crypto.Hash
 import Crypto.Strings
 import Date
 import Element exposing (..)
+import Element.Background as Background
+import Element.Border as Border
 import Element.Font as Font
 import Generic.Decoder
 import Generic.Json
@@ -21,14 +23,18 @@ import Iso8601
 import Json.Decode
 import Json.Decode.Generic
 import MD5
+import Mailcheck
+import Minidenticons
 import Murmur3
 import Path
 import Path.Platform
+import Punycode
 import QRCode
 import Random
 import Regex
 import Shared
 import String.Extra
+import StringDistance
 import Time
 import Url
 import Yaml.Decode
@@ -1280,5 +1286,97 @@ list model =
                             model.debounced_valu2
                             model.debounced_value
                 ]
+             }
+
+           --
+           -- laurentpayot/minidenticons-elm
+           -- https://package.elm-lang.org/packages/laurentpayot/minidenticons-elm/latest/Minidenticons
+           --
+           , { prefix = "Minidenticons"
+             , function = "identicon"
+             , signature = "Int -> Int -> String -> Html msg"
+             , description = "Generates identicons (pixelated avatars) on the client from usernames."
+             , package = "laurentpayot/minidenticons-elm"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldInt ++ Shared.space ++ Shared.inputField model Shared.Valu2 Shared.FieldInt ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ el [ padding 5, moveDown 15, width <| px 50, height <| px 50, Background.color <| rgba 0 0 0 0.1, Border.rounded 100 ] <| html <| Minidenticons.identicon (Maybe.withDefault 50 (String.toInt model.debounced_valu1)) (Maybe.withDefault 50 (String.toInt model.debounced_valu2)) model.debounced_value ]
+             }
+           , { prefix = "Minidenticons"
+             , function = "simpleHash "
+             , signature = "String -> Int"
+             , description = "Hash function used by Minidenticons. Based on the FNV1a hash algorithm, modified for signed 32 bit integers. Always return a positive integer."
+             , package = "laurentpayot/minidenticons-elm"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Minidenticons.simpleHash model.debounced_value ]
+             }
+
+           --
+           -- rluiten/mailcheck
+           -- https://elm.dmy.fr/packages/rluiten/mailcheck/latest/Mailcheck
+           --
+           , { prefix = "Mailcheck"
+             , function = "suggest"
+             , signature = "String -> Maybe ( String, String, String )"
+             , description = "Suggest a domain which may assist a user with a possible error in a candidate email address."
+             , package = "rluiten/mailcheck"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Mailcheck.suggest model.debounced_value ]
+             }
+           , { prefix = "Mailcheck"
+             , function = "encodeEmail"
+             , signature = "String -> Maybe String"
+             , description = "Encode the email address to prevent XSS but leave in valid characters, following this official spec: http://en.wikipedia.org/wiki/Email_address#Syntax."
+             , package = "rluiten/mailcheck"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Mailcheck.encodeEmail model.debounced_value ]
+             }
+           , { prefix = "Mailcheck"
+             , function = "mailParts"
+             , signature = "String -> Maybe MailParts"
+             , description = "Split an email address up into components."
+             , package = "rluiten/mailcheck"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Mailcheck.mailParts model.debounced_value ]
+             }
+
+           --
+           -- rluiten/stringdistance
+           -- https://elm.dmy.fr/packages/rluiten/stringdistance/latest/StringDistance
+           --
+           , { prefix = "StringDistance"
+             , function = "sift3Distance "
+             , signature = "String -> String -> Float"
+             , description = "Calculate sift3 string distance between candidate strings."
+             , package = "rluiten/stringdistance"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldString ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| StringDistance.sift3Distance model.debounced_valu1 model.debounced_value ]
+             }
+
+           --
+           -- tasuki/elm-punycode
+           -- https://elm.dmy.fr/packages/tasuki/elm-punycode/latest/
+           --
+           , { prefix = "Punycode"
+             , function = "decodeIdn "
+             , signature = "String -> String"
+             , description = "Decodes an internationalized domain name into Unicode. Attempts to follow RFC 3492 using the xn-- ACE prefix for each encoded part."
+             , package = "tasuki/elm-punycode"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Punycode.decodeIdn model.debounced_value ]
+             }
+           , { prefix = "Punycode"
+             , function = "decode "
+             , signature = "String -> String"
+             , description = "Decodes a Punycode-encoded string into Unicode. Attempts to follow RFC 3492."
+             , package = "tasuki/elm-punycode"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Punycode.decode model.debounced_value ]
              }
            ]
