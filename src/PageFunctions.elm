@@ -22,6 +22,7 @@ import Html.Attributes
 import Iso8601
 import Json.Decode
 import Json.Decode.Generic
+import Levenshtein
 import MD5
 import Mailcheck
 import Minidenticons
@@ -1355,6 +1356,20 @@ list model =
              , executionBefore = []
              , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldString ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
              , outcome = [ text <| Debug.toString <| StringDistance.sift3Distance model.debounced_valu1 model.debounced_value ]
+             }
+
+           --
+           -- dasch/levenshtein
+           -- https://package.elm-lang.org/packages/dasch/levenshtein/latest/Levenshtein
+           --
+           , { prefix = "Levenshtein"
+             , function = "distance "
+             , signature = "String -> String -> Float"
+             , description = "Computes the Levenshtein distance between two strings."
+             , package = "dasch/levenshtein"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldString ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Levenshtein.distance model.debounced_valu1 model.debounced_value ]
              }
 
            --
