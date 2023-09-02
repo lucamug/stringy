@@ -36,6 +36,7 @@ import Regex
 import Shared
 import String.Extra
 import StringDistance
+import StringDistance4
 import Time
 import Url
 import Yaml.Decode
@@ -1370,6 +1371,19 @@ list model =
              , executionBefore = []
              , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldString ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
              , outcome = [ text <| Debug.toString <| Levenshtein.distance model.debounced_valu1 model.debounced_value ]
+             }
+
+           --
+           -- lucamug/sift4
+           --
+           , { prefix = "StringDistance"
+             , function = "sift4Distance "
+             , signature = "String -> String -> Float"
+             , description = "Calculate sift4 string distance between two strings."
+             , package = "lucamug/stringdistance"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Valu1 Shared.FieldString ++ Shared.space ++ Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| StringDistance4.sift4Distance model.debounced_valu1 model.debounced_value 5 ]
              }
 
            --
