@@ -76,7 +76,8 @@ sift4Distance s1 s2 maxOffset =
                         --     lcss += local_cs;
                         --     return Math.round(Math.max(l1, l2) - lcss);
                         --
-                        max l1 l2 - (v2.lcss + v2.local_cs)
+                        max l1 l2
+                            - (v2.lcss + v2.local_cs)
                    )
 
 
@@ -164,7 +165,7 @@ whileLoopInnerInnerPart c v =
                 { c1 = m
                 , c2 = m
                 , lcss = v.lcss
-                , local_cs = v.local_cs + 1
+                , local_cs = v.local_cs
                 }
             , c = c
             }
@@ -188,7 +189,7 @@ forLoop { i, v, c } =
         -- JS:
         --     if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
         --
-        if (v.c1 + 1 < c.l1) && charAt (v.c1 + 1) c.s1 == charAt v.c2 c.s2 then
+        if (v.c1 + i < c.l1) && charAt (v.c1 + i) c.s1 == charAt v.c2 c.s2 then
             --
             -- JS:
             --     c1 += i;
@@ -319,12 +320,14 @@ charAt int string =
 --
 --
 --
--- main : Html.Html msg
+--
+--
+-- main : Html msg
 -- main =
 --     div []
 --         [ text ""
---         , div [] [ text <| Debug.toString <| sift4Distance "abc" "ac" 5 ]
---         , div [] [ text <| Debug.toString <| sift4Distance "gma.com" "gmail.com" 5 ]
+--         , div [] [ text <| Debug.toString <| sift4Distance "mac.com" "gma.com" 5 ]
+--         , div [] [ text <| Debug.toString <| sift4Distance "gma.com" "mac.com" 5 ]
 --         ]
 --
 --
