@@ -1,5 +1,9 @@
 module StringDistance4 exposing (..)
 
+import Html exposing (..)
+
+
+
 -- Note: This code is not canonical Elm code style. It is a translation line by line
 --       of "Simplest Sift4" at https://siderite.dev/blog/super-fast-and-accurate-string-distance.html
 --       We keep as closer as JavaScript as possible for easy debugging.
@@ -28,6 +32,9 @@ type alias Variables =
 sift4Distance : String -> String -> Int -> Int
 sift4Distance s1 s2 maxOffset =
     let
+        _ =
+            Debug.log "xxx" ( s1, s2 )
+
         l1 : Int
         l1 =
             String.length s1
@@ -76,7 +83,15 @@ sift4Distance s1 s2 maxOffset =
                         --     lcss += local_cs;
                         --     return Math.round(Math.max(l1, l2) - lcss);
                         --
-                        max l1 l2 - (v2.lcss + v2.local_cs)
+                        let
+                            _ =
+                                Debug.log "xxx FINAL"
+                                    { lcss = v2.lcss
+                                    , local_cs = v2.local_cs
+                                    }
+                        in
+                        max l1 l2
+                            - (v2.lcss + v2.local_cs)
                    )
 
 
@@ -121,6 +136,14 @@ whileLoopInnerPart c v =
             -- JS:
             --     local_cs++;
             --
+            -- let
+            --     _ =
+            --         Debug.log "xxx" ( charAt v.c1 c.s1, charAt v.c2 c.s2 )
+            -- in
+            let
+                _ =
+                    Debug.log "xxx new local_cs" ( charAt v.c1 c.s1, charAt v.c2 c.s2, v.local_cs + 1 )
+            in
             { c1 = v.c1
             , c2 = v.c2
             , lcss = v.lcss
@@ -148,6 +171,15 @@ whileLoopInnerInnerPart c v =
     -- JS:
     --     if (c1 != c2) {..}
     --
+    let
+        _ =
+            Debug.log "xxx Before for-loop start"
+                { c1 = v.c1
+                , c2 = v.c2
+                , lcss = v.lcss
+                , local_cs = v.local_cs
+                }
+    in
     if v.c1 /= v.c2 then
         let
             m : Int
@@ -188,13 +220,17 @@ forLoop { i, v, c } =
         -- JS:
         --     if ((c1 + i < l1) && (s1.charAt(c1 + i) == s2.charAt(c2))) {
         --
-        if (v.c1 + 1 < c.l1) && charAt (v.c1 + 1) c.s1 == charAt v.c2 c.s2 then
+        if (v.c1 + i < c.l1) && charAt (v.c1 + i) c.s1 == charAt v.c2 c.s2 then
             --
             -- JS:
             --     c1 += i;
             --     local_cs++;
             --     break;
             --
+            let
+                _ =
+                    Debug.log "xxx increase c1, new local_cs" { i = i, local_cs = v.local_cs + 1 }
+            in
             { c1 = v.c1 + i
             , c2 = v.c2
             , lcss = v.lcss
@@ -215,6 +251,10 @@ forLoop { i, v, c } =
             --     local_cs++;
             --     break;
             --
+            let
+                _ =
+                    Debug.log "increase c2, new local_cs" { i = i, local_cs = v.local_cs + 1 }
+            in
             { c1 = v.c1
             , c2 = v.c2 + i
             , lcss = v.lcss
@@ -319,12 +359,12 @@ charAt int string =
 --
 --
 --
--- main : Html.Html msg
--- main =
---     div []
---         [ text ""
---         , div [] [ text <| Debug.toString <| sift4Distance "abc" "ac" 5 ]
---         , div [] [ text <| Debug.toString <| sift4Distance "gma.com" "gmail.com" 5 ]
---         ]
---
---
+
+
+main : Html msg
+main =
+    div []
+        [ text ""
+        , div [] [ text <| Debug.toString <| sift4Distance "mac.com" "gma.com" 5 ]
+        , div [] [ text <| Debug.toString <| sift4Distance "gma.com" "mac.com" 5 ]
+        ]
