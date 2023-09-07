@@ -1,7 +1,8 @@
 module StringDistance4 exposing (..)
 
 -- Note: This code is not canonical Elm code style. It is a translation line by line
---       of "Simplest Sift4" at https://siderite.dev/blog/super-fast-and-accurate-string-distance.html
+--       of "Simplest Sift4" at
+--       https://siderite.dev/blog/super-fast-and-accurate-string-distance.html
 --       We keep as closer as JavaScript as possible for easy debugging.
 --
 -- Note: We don't use the { a | b = c } syntax becuase is les performant
@@ -9,51 +10,29 @@ module StringDistance4 exposing (..)
 
 
 type alias Constants =
-    { s1 : String
-    , s2 : String
-    , l1 : Int
-    , l2 : Int
-    , maxOffset : Int
-    }
+    { s1 : String, s2 : String, l1 : Int, l2 : Int, maxOffset : Int }
 
 
 type alias Variables =
-    { c1 : Int
-    , c2 : Int
-    , lcss : Int
-    , local_cs : Int
-    }
+    { c1 : Int, c2 : Int, lcss : Int, local_cs : Int }
 
 
 sift4Distance : String -> String -> Int -> Int
 sift4Distance s1 s2 maxOffset =
     let
-        l1 : Int
-        l1 =
-            String.length s1
-
-        l2 : Int
-        l2 =
-            String.length s2
+        c : Constants
+        c =
+            { s1 = s1, s2 = s2, l1 = String.length s1, l2 = String.length s2, maxOffset = maxOffset }
     in
-    case ( l1, l2 ) of
+    case ( c.l1, c.l2 ) of
         ( 0, _ ) ->
-            l2
+            c.l2
 
         ( _, 0 ) ->
-            l1
+            c.l1
 
         _ ->
             let
-                c : Constants
-                c =
-                    { s1 = s1
-                    , s2 = s2
-                    , l1 = l1
-                    , l2 = l2
-                    , maxOffset = maxOffset
-                    }
-
                 v : Variables
                 v =
                     --
@@ -63,21 +42,16 @@ sift4Distance s1 s2 maxOffset =
                     --     var lcss = 0; //largest common subsequence
                     --     var local_cs = 0; //local common substring
                     --
-                    { c1 = 0
-                    , c2 = 0
-                    , lcss = 0
-                    , local_cs = 0
-                    }
+                    { c1 = 0, c2 = 0, lcss = 0, local_cs = 0 }
             in
             whileLoop c v
-                |> (\v2 ->
+                |> (\vFinal ->
                         --
                         -- JS:
                         --     lcss += local_cs;
                         --     return Math.round(Math.max(l1, l2) - lcss);
                         --
-                        max l1 l2
-                            - (v2.lcss + v2.local_cs)
+                        max c.l1 c.l2 - (vFinal.lcss + vFinal.local_cs)
                    )
 
 
@@ -88,59 +62,40 @@ whileLoop c v =
     --     while ((c1 < l1) && (c2 < l2)) {..}
     --
     if (v.c1 < c.l1) && (v.c2 < c.l2) then
-        whileLoop
-            c
-            (whileLoopInnerPart c v)
+        whileLoop c (whileLoopInnerPart c v)
 
     else
         v
 
 
-incrementC1C2 : Variables -> Variables
-incrementC1C2 v =
-    --
-    -- JS:
-    --     c1++;
-    --     c2++;
-    --
-    { c1 = v.c1 + 1
-    , c2 = v.c2 + 1
-    , lcss = v.lcss
-    , local_cs = v.local_cs
-    }
-
-
 whileLoopInnerPart : Constants -> Variables -> Variables
 whileLoopInnerPart c v =
-    incrementC1C2
+    --
+    -- JS:
+    --     if (s1.charAt(c1) == s2.charAt(c2)) {..}
+    --
+    (if charAt v.c1 c.s1 == charAt v.c2 c.s2 then
         --
         -- JS:
-        --     if (s1.charAt(c1) == s2.charAt(c2)) {..}
+        --     local_cs++;
         --
-        (if charAt v.c1 c.s1 == charAt v.c2 c.s2 then
+        { c1 = v.c1, c2 = v.c2, lcss = v.lcss, local_cs = v.local_cs + 1 }
+
+     else
+        whileLoopInnerInnerPart c
             --
             -- JS:
-            --     local_cs++;
+            --     lcss += local_cs;
+            --     local_cs = 0;
             --
-            { c1 = v.c1
-            , c2 = v.c2
-            , lcss = v.lcss
-            , local_cs = v.local_cs + 1
-            }
-
-         else
-            whileLoopInnerInnerPart c
-                --
-                -- JS:
-                --     lcss += local_cs;
-                --     local_cs = 0;
-                --
-                { c1 = v.c1
-                , c2 = v.c2
-                , lcss = v.lcss + v.local_cs
-                , local_cs = 0
-                }
-        )
+            { c1 = v.c1, c2 = v.c2, lcss = v.lcss + v.local_cs, local_cs = 0 }
+    )
+        |> --
+           -- JS:
+           --     c1++;
+           --     c2++;
+           --
+           (\v2 -> { c1 = v2.c1 + 1, c2 = v2.c2 + 1, lcss = v2.lcss, local_cs = v2.local_cs })
 
 
 whileLoopInnerInnerPart : Constants -> Variables -> Variables
@@ -151,35 +106,22 @@ whileLoopInnerInnerPart c v =
     --
     if v.c1 /= v.c2 then
         let
-            m : Int
-            m =
+            maxC1C2 : Int
+            maxC1C2 =
                 max v.c1 v.c2
         in
-        forLoop
-            { i = 0
-            , v =
-                --
-                -- JS:
-                --     c1 = c2 = Math.max(c1, c2); //using max to bypass the need for computer transpositions ('ab' vs 'ba')
-                --
-                { c1 = m
-                , c2 = m
-                , lcss = v.lcss
-                , local_cs = v.local_cs
-                }
-            , c = c
-            }
+        --
+        -- JS:
+        --     c1 = c2 = Math.max(c1, c2); //using max to bypass the need for computer transpositions ('ab' vs 'ba')
+        --
+        forLoop 0 c { c1 = maxC1C2, c2 = maxC1C2, lcss = v.lcss, local_cs = v.local_cs }
 
     else
-        forLoop
-            { i = 0
-            , v = v
-            , c = c
-            }
+        forLoop 0 c v
 
 
-forLoop : { i : Int, v : Variables, c : Constants } -> Variables
-forLoop { i, v, c } =
+forLoop : Int -> Constants -> Variables -> Variables
+forLoop i c v =
     --
     -- JS:
     --     for (var i = 0; i < maxOffset && (c1 + i < l1 || c2 + i < l2); i++) {..}
@@ -196,42 +138,27 @@ forLoop { i, v, c } =
             --     local_cs++;
             --     break;
             --
-            { c1 = v.c1 + i
-            , c2 = v.c2
-            , lcss = v.lcss
-            , local_cs = v.local_cs + 1
-            }
+            { c1 = v.c1 + i, c2 = v.c2, lcss = v.lcss, local_cs = v.local_cs + 1 }
+            --
+            -- JS:
+            --     if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
+            --
 
-        else
-        --
-        -- JS:
-        --     if ((c2 + i < l2) && (s1.charAt(c1) == s2.charAt(c2 + i))) {
-        --
-        if
-            (v.c2 + i < c.l2) && (charAt v.c1 c.s1 == charAt (v.c2 + i) c.s2)
-        then
+        else if (v.c2 + i < c.l2) && (charAt v.c1 c.s1 == charAt (v.c2 + i) c.s2) then
             --
             -- JS:
             --     c2 += i;
             --     local_cs++;
             --     break;
             --
-            { c1 = v.c1
-            , c2 = v.c2 + i
-            , lcss = v.lcss
-            , local_cs = v.local_cs + 1
-            }
+            { c1 = v.c1, c2 = v.c2 + i, lcss = v.lcss, local_cs = v.local_cs + 1 }
 
         else
-            forLoop
-                --
-                -- JS:
-                --     i++
-                --
-                { i = i + 1
-                , v = v
-                , c = c
-                }
+            --
+            -- JS:
+            --     i++
+            --
+            forLoop (i + 1) c v
 
     else
         -- We go out of the for-loop.
