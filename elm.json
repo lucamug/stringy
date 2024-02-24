@@ -26,6 +26,7 @@
             "jinjor/elm-debounce": "3.0.0",
             "justinmimbs/date": "4.0.1",
             "ktonon/elm-crypto": "1.1.2",
+            "kyasu1/elm-ulid": "1.0.0",
             "laurentpayot/minidenticons-elm": "1.0.1",
             "mdgriffith/elm-ui": "1.1.7",
             "noahzgordon/elm-color-extra": "1.0.2",

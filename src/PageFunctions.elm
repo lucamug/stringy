@@ -38,6 +38,7 @@ import String.Extra
 import StringDistance
 import StringDistance4
 import Time
+import Ulid
 import Url
 import Yaml.Decode
 
@@ -1050,6 +1051,34 @@ list model =
              , executionBefore = []
              , executionAfter = [ text "Path.Platform.win32 " ] ++ Shared.inputField model Shared.Value Shared.FieldString
              , outcome = [ text <| Debug.toString <| Path.fromString Path.Platform.win32 model.debounced_value ]
+             }
+           ]
+        --
+        -- kyasu1/elm-ulid
+        --
+        ++ [ { prefix = "Ulid"
+             , function = "fromString"
+             , signature = "String -> Maybe Ulid"
+             , description = "Try to parse a string representation as an ULID, ie. 26 character length with valid characters of 0123456789ABCDEFGHJKMNPQRSTVWXYZ. Detect overflowing if the ULID is larger than 7ZZZZZZZZZZZZZZZZZZZZZZZZZ."
+             , package = "kyasu1/elm-ulid"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome = [ text <| Debug.toString <| Ulid.fromString model.debounced_value ]
+             }
+           , { prefix = "Ulid"
+             , function = "toTimestamp"
+             , signature = "Ulid -> Posix"
+             , description = "Extract the Timestamp part only."
+             , package = "kyasu1/elm-ulid"
+             , executionBefore = []
+             , executionAfter = Shared.inputField model Shared.Value Shared.FieldString
+             , outcome =
+                [ Ulid.fromString model.debounced_value
+                    |> Maybe.map Ulid.toTimestamp
+                    |> Maybe.map Iso8601.fromTime
+                    |> Debug.toString
+                    |> text
+                ]
              }
            ]
         --
