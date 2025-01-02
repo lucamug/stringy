@@ -423,7 +423,7 @@ header attrs tabindex model =
                     , label =
                         image [ width <| px 200, centerX ]
                             { description = "String image"
-                            , src = "/images/string_small.png"
+                            , src = "images/string_small.png"
                             }
                     }
                 ]

@@ -187,7 +187,7 @@ homePageView listOfLinks innerWidth locationHref =
                 , shadow
                 , clip
                 ]
-                { description = "", src = "/images/animation.gif" }
+                { description = "", src = "images/animation.gif" }
          , myLink
             [ Border.rounded 50
             , shadow
