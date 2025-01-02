@@ -4,7 +4,7 @@ set -eu
 # This is a configuration file read by bash commands
 
 ROOT_FOLDER=./
-FOLDER_BUILD="dist"
+FOLDER_BUILD="docs"
 FOLDER_TEMP="${FOLDER_BUILD}/TEMP"
 
 NODE_MODULES_FOLDER=$ROOT_FOLDER/node_modules

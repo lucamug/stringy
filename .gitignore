@@ -1,6 +1,3 @@
-# Build folders
-dist/
-
 # Dependency folders (can exists also on subfolders)
 elm-stuff/
 node_modules/
