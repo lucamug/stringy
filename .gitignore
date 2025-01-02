@@ -19,5 +19,5 @@ Elmjutsu*.elm
 /index.html
 
 # This file is just copied from the root, no need to git it
-/docs/js/elm.js
-/docs/index.html
+/static/js/elm.js
+/static/index.html

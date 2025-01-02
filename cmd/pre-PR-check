@@ -3,7 +3,7 @@ set -eu
 
 source cmd/config
 rootFolder=`pwd`
-reportFile=docs/pre-PR-check-report.txt
+reportFile=static/pre-PR-check-report.txt
 DONE=" ${SECONDARY}done${STOP}\n"
 
 function formatAll {

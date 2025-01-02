@@ -82,8 +82,8 @@ function singleCommand {
 function createIndexHtml {
     printf "${PRIMARY}${POINT}Creating index.html......."
     START_TIME=$SECONDS 
-    SOURCE=docs/index.template.html
-    TARGET=docs/index.html
+    SOURCE=static/index.template.html
+    TARGET=static/index.html
     cp $SOURCE $TARGET
     COMMAND="$NODEAPP_REPLACE '\[=SERVICE_NAME\]'  '${SERVICE_NAME}'  ${TARGET} -m -i --silent"
     eval "${COMMAND}"

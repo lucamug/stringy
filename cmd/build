@@ -42,7 +42,7 @@ printf "${PRIMARY}${POINT}Start minifing JavaScript${STOP}\n"
     # Read https://discourse.elm-lang.org/t/what-i-ve-learned-about-minifying-elm-code/7632/3
     # for smaller bundle.
     #
-    cat ${FOLDER_TEMP}/elm.js docs/js/starter.js > ${FOLDER_TEMP}/concatenated.js
+    cat ${FOLDER_TEMP}/elm.js static/js/starter.js > ${FOLDER_TEMP}/concatenated.js
     # COMMAND="${NODEAPP_ESBUILD} ${FOLDER_TEMP}/concatenated.js --minify --target=es5 --outfile=$FOLDER_BUILD/js/elm.min.js"
     COMMAND="${NODEAPP_TERSER} ${FOLDER_TEMP}/concatenated.js --no-rename --compress 'pure_funcs=\"F2,F3,F4,F5,F6,F7,F8,F9,A2,A3,A4,A5,A6,A7,A8,A9\",pure_getters=true,keep_fargs=false,unsafe_comps=true,unsafe=true,passes=2' --mangle --output=$FOLDER_BUILD/js/elm.min.js"
     eval "${COMMAND}"    
@@ -55,7 +55,7 @@ createIndexHtml
 
 printf "${PRIMARY}${POINT}Modifing index.html......."
     START_TIME=$SECONDS
-    cp docs/index.html $FOLDER_TEMP/index.html
+    cp static/index.html $FOLDER_TEMP/index.html
     $NODEAPP_REPLACE '(<script class="dev-only".*</script>)' '<!-- $1 -->' $FOLDER_TEMP/index.html -m -i --silent
     $NODEAPP_REPLACE '<!-- prod-only (.*) -->' '$1' $FOLDER_TEMP/index.html -m -i --silent
     $NODEAPP_HTML_MINIFIER -o $FOLDER_BUILD/index.html $FOLDER_TEMP/index.html --remove-comments --collapse-whitespace --collapse-inline-tag-whitespace --minify-css --minify-js
@@ -65,10 +65,10 @@ printf "$BLUE done in $ELAPSED_TIME secs$STOP\n"
 
 printf "${PRIMARY}${POINT}Copying other files ......"
     START_TIME=$SECONDS 
-    cp docs/images/*     $FOLDER_BUILD/images/
-    cp docs/robots.txt   $FOLDER_BUILD
-    cp docs/sitemap.txt  $FOLDER_BUILD
-    cp docs/_redirects   $FOLDER_BUILD
+    cp static/images/*     $FOLDER_BUILD/images/
+    cp static/robots.txt   $FOLDER_BUILD
+    cp static/sitemap.txt  $FOLDER_BUILD
+    cp static/_redirects   $FOLDER_BUILD
     cp elm.json          $FOLDER_BUILD
     ELAPSED_TIME=$(($SECONDS - $START_TIME))
 printf "$BLUE done in $ELAPSED_TIME secs$STOP\n"

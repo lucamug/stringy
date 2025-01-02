@@ -3,4 +3,4 @@
 
 https://stringy.guupa.com/
 
-![picture](docs/images/stringy-small.png)
+![picture](static/images/stringy-small.png)

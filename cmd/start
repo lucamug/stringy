@@ -3,6 +3,6 @@ set -eu
 
 source cmd/config
 createIndexHtml
-COMMAND="${ELM_GO} src/Main.elm --dir=docs --pushstate --start-page=index.html --hot --port=4200 --path-to-elm=${ELM} -- --output=docs/js/elm.js --debug"
+COMMAND="${ELM_GO} src/Main.elm --dir=static --pushstate --start-page=index.html --hot --port=4200 --path-to-elm=${ELM} -- --output=static/js/elm.js --debug"
 COMMENT="Starting the development environment"
 singleCommand "${COMMAND}" "${COMMENT}"
